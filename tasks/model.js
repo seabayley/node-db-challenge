@@ -10,6 +10,11 @@ const getTasks = () => {
             'projects.project_description')
 }
 
+const getTasksByProject = id => {
+    return db('tasks')
+    .where('tasks.project_id', id)
+}
+
 const addTask = (task) => {
     return db('tasks').insert(task)
     .then(() => {
@@ -20,5 +25,6 @@ const addTask = (task) => {
 
 module.exports = {
     getTasks,
-    addTask
+    addTask,
+    getTasksByProject
 }

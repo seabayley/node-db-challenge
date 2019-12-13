@@ -15,9 +15,10 @@ const addProject = project => {
 
 const getTasks = id => {
     return db('tasks')
-    .select('tasks.task_description',
-            'tasks.task_notes',
-            'tasks.task_completed')
+    .select('tasks.id',
+            'tasks.task_description as description',
+            'tasks.task_notes as notes',
+            'tasks.task_completed as completed')
     .where('tasks.project_id', id)
 }
 

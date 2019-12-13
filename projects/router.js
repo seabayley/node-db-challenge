@@ -2,6 +2,7 @@ const express = require('express')
 
 const Projects = require('./model')
 const Tasks = require('../tasks/model')
+const Resources = require('../resources/model')
 
 const router = express.Router()
 
@@ -40,6 +41,29 @@ router.get('/:id/tasks', (req, res) => {
   })
   .catch(err => {
     res.status(404).json({message: "Unable to locate project with that id."})
+  })
+})
+
+router.get('/:id', (req, res) => {
+  const {id} = req.params
+  Projects.findById(id)
+  .then(project => {
+    Projects.getTasks(id)
+      .then(tasks => {
+        Resources.getResourcesByProject(id)
+          .then(resources => {
+            res.status(200).json({
+              id: project.id,
+              name: project.project_name,
+              description: project.project_description,
+              completed: !!project.projected_completed,
+              tasks: tasks.map(task => {
+                return {...task, completed: !!task.task_completed}
+              }),
+              resources: resources
+            })
+          })
+      })
   })
 })
 
